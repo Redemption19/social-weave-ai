@@ -3,7 +3,6 @@
 # dependencies
 /node_modules
 env.local
-drizzle.config.js
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -36,3 +35,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# drizzle config
+drizzle.config.js
