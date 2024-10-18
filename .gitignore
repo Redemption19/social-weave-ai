@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 env.local
+drizzle.config.js
 /.pnp
 .pnp.js
 .yarn/install-state.gz
