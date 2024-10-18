@@ -9,7 +9,7 @@ import {
   useAuth,
 } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
-import { Menu, X, Zap } from "lucide-react";
+import { BotMessageSquare, Menu, X, Zap } from "lucide-react";
 
 export function Navbar() {
   const { userId } = useAuth();
@@ -34,7 +34,7 @@ export function Navbar() {
         <div className="flex flex-wrap justify-between items-center max-w-6xl mx-auto">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <Zap className="w-8 h-8 text-blue-500" />
+              <BotMessageSquare className="w-8 h-8 text-blue-500" />
               <span className="text-xl sm:text-2xl font-bold text-white">
                 SocialWeave AI
               </span>
