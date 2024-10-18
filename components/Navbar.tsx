@@ -26,9 +26,8 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-gray-900/80 backdrop-blur-md" : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-gray-900/80 backdrop-blur-md" : "bg-transparent"
+        }`}
     >
       <nav className="container mx-auto px-4 sm:px-8 py-4 sm:py-6">
         <div className="flex flex-wrap justify-between items-center max-w-6xl mx-auto">
@@ -51,9 +50,8 @@ export function Navbar() {
             )}
           </button>
           <div
-            className={`w-full sm:w-auto ${
-              isMenuOpen ? "block" : "hidden"
-            } sm:block mt-4 sm:mt-0`}
+            className={`w-full sm:w-auto ${isMenuOpen ? "block" : "hidden"
+              } sm:block mt-4 sm:mt-0`}
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-8">
               {["Features", "Pricing", "Docs"].map((item) => (
@@ -82,7 +80,7 @@ export function Navbar() {
                   </button>
                 </SignInButton>
                 <SignUpButton mode="modal">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full transition-colors mt-2 sm:mt-0">
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors mt-2 sm:mt-0">
                     Sign Up
                   </button>
                 </SignUpButton>
