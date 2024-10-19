@@ -7,16 +7,34 @@ export async function createOrUpdateUser(
     name: string,
 ) {
     try {
-        const [updatedUser] = await db
-          .update(Users)
-          .set({ name, email})
-          .where(eq(Users.stripeCustomerId, clerkUserId))
-          .returning()
-          .execute();
-          console.log("Updated user:", updatedUser)
-        return updatedUser;
-      } catch (error) {
-        console.error("Error updating user points:", error);
+        const [existingUser] = await db
+            .update(Users)
+            .set({ name, email })
+            .where(eq(Users.stripeCustomerId, clerkUserId))
+            .returning()
+            .execute();
+
+        if (existingUser) {
+            const [updatedUser] = await db
+                .update(Users)
+                .set({ name, email })
+                .where(eq(Users.stripeCustomerId, clerkUserId))
+                .returning()
+                .execute();
+            console.log("Updated user:", updatedUser)
+            return updatedUser;
+        }
+        const [newUser] = await db
+            .insert(Users)
+            .values({ email, name, stripeCustomerId: clerkUserId, points: 50 })
+            .returning()
+            .execute();
+        console.log("New user created Successfully", newUser);
+
+        // Send A Welcome Email Message to New Users
+        
+    } catch (error) {
+        console.error("Error creating or updating user:", error);
         return null;
-      }
     }
+}
