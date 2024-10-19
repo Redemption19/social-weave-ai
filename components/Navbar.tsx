@@ -74,16 +74,18 @@ export function Navbar() {
                 </Link>
               )}
               <SignedOut>
-                <SignInButton mode="modal">
-                  <button className="text-gray-300 hover:text-white transition-colors mt-2 sm:mt-0">
-                    Sign In
-                  </button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors mt-2 sm:mt-0">
-                    Sign Up
-                  </button>
-                </SignUpButton>
+                <div className="flex items-center space-x-2">
+                  <SignInButton mode="modal">
+                    <button className="bg-white hover:bg-gray-100 text-blue-600 hover:text-blue-700 px-4 py-2 rounded transition-colors transition-transform transform hover:-translate-y-1">
+                      Sign In
+                    </button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-transform transform hover:-translate-y-1">
+                      Sign Up
+                    </button>
+                  </SignUpButton>
+                </div>
               </SignedOut>
               <SignedIn>
                 <UserButton
