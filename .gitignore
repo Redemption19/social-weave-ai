@@ -38,3 +38,6 @@ next-env.d.ts
 
 # drizzle config
 drizzle.config.js
+
+# Mailtrap
+index.mjs
