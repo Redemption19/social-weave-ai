@@ -110,7 +110,7 @@ export default function PricingPage() {
                     key={featureIndex}
                     className="flex items-center mb-3 text-gray-300"
                   >
-                    <CheckIcon className="w-5 h-5 mr-2 text-green-500" />
+                    <CheckIcon className="w-5 h-5 mr-2 text-blue-600" />
                     {feature}
                   </li>
                 ))}
@@ -118,7 +118,7 @@ export default function PricingPage() {
               <Button
                 onClick={() => plan.priceId && handleSubscribe(plan.priceId)}
                 disabled={isLoading || !plan.priceId}
-                className="w-full bg-white text-black hover:bg-gray-200"
+                className="w-full bg-blue-600 text-white hover:bg-white hover:text-blue-600 font-bold"
               >
                 {isLoading ? "Processing..." : "Choose Plan"}
               </Button>
