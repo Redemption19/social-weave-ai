@@ -83,9 +83,9 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-gray-100">
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       <Navbar />
-      <main className="container mx-auto px-8 py-20">
+      <main className="container mx-auto px-8 py-40">
         <h1 className="text-5xl font-bold mb-12 text-center text-white">
           Pricing Plans
         </h1>
