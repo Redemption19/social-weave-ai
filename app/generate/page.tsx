@@ -276,7 +276,7 @@ export default function GenerateContent() {
     <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white">
       <Navbar />
       <div className="container mx-auto px-4 mb-8 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 mt-14 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 mt-20 lg:grid-cols-3 gap-8">
           {/* Left sidebar - History */}
           <div className="lg:col-span-1 bg-gray-800 rounded-2xl p-6 h-[calc(100vh-12rem)] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
