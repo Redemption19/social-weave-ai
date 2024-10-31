@@ -1,7 +1,9 @@
-import { db } from "./dbConfig";
+'use server'
+
+import { db, withDb } from "./dbConfig";
 import { Users, Subscriptions, GeneratedContent } from "./schema";
-import { eq, sql, and, desc } from "drizzle-orm";
-import { sendWelcomeEmail, initMailtrap } from "../mailtrap";
+import { eq, sql, desc } from "drizzle-orm";
+import { sendWelcomeEmail } from "../mailtrap";
 
 export async function updateUserPoints(userId: string, points: number) {
   try {
@@ -9,32 +11,26 @@ export async function updateUserPoints(userId: string, points: number) {
       .update(Users)
       .set({ points: sql`${Users.points} + ${points}` })
       .where(eq(Users.stripeCustomerId, userId))
-      .returning()
-      .execute();
+      .returning();
     return updatedUser;
   } catch (error) {
     console.error("Error updating user points:", error);
-    return null;
+    throw error; // Consider if you want to throw or return null based on your error handling strategy
   }
 }
 
 export async function getUserPoints(userId: string) {
   try {
-    console.log("Fetching points for user:", userId);
     const users = await db
       .select({ points: Users.points, id: Users.id, email: Users.email })
       .from(Users)
-      .where(eq(Users.stripeCustomerId, userId))
-      .execute();
-    console.log("Fetched users:", users);
-    if (users.length === 0) {
-      console.log("No user found with stripeCustomerId:", userId);
-      return 0;
-    }
-    return users[0].points || 0;
+      .where(eq(Users.stripeCustomerId, userId));
+      
+    if (!users.length) return 0;
+    return users[0].points ?? 0;
   } catch (error) {
     console.error("Error fetching user points:", error);
-    return 0;
+    throw error;
   }
 }
 
@@ -46,28 +42,23 @@ export async function createOrUpdateSubscription(
   currentPeriodStart: Date,
   currentPeriodEnd: Date
 ) {
-  try {
+  return await withDb(async (db) => {
     const [user] = await db
       .select({ id: Users.id })
       .from(Users)
       .where(eq(Users.stripeCustomerId, userId))
       .limit(1);
 
-    if (!user) {
-      console.error(`No user found with stripeCustomerId: ${userId}`);
-      return null;
-    }
+    if (!user) throw new Error(`No user found with stripeCustomerId: ${userId}`);
 
-    const existingSubscription = await db
+    const [existing] = await db
       .select()
       .from(Subscriptions)
       .where(eq(Subscriptions.stripeSubscriptionId, stripeSubscriptionId))
       .limit(1);
 
-    let subscription;
-    if (existingSubscription.length > 0) {
-      // Update existing subscription
-      [subscription] = await db
+    if (existing) {
+      const [subscription] = await db
         .update(Subscriptions)
         .set({
           plan,
@@ -76,29 +67,23 @@ export async function createOrUpdateSubscription(
           currentPeriodEnd,
         })
         .where(eq(Subscriptions.stripeSubscriptionId, stripeSubscriptionId))
-        .returning()
-        .execute();
-    } else {
-      [subscription] = await db
-        .insert(Subscriptions)
-        .values({
-          userId: user.id,
-          stripeSubscriptionId,
-          plan,
-          status,
-          currentPeriodStart,
-          currentPeriodEnd,
-        })
-        .returning()
-        .execute();
+        .returning();
+      return subscription;
     }
 
-    console.log("Subscription created or updated:", subscription);
+    const [subscription] = await db
+      .insert(Subscriptions)
+      .values({
+        userId: user.id,
+        stripeSubscriptionId,
+        plan,
+        status,
+        currentPeriodStart,
+        currentPeriodEnd,
+      })
+      .returning();
     return subscription;
-  } catch (error) {
-    console.error("Error creating or updating subscription:", error);
-    return null;
-  }
+  });
 }
 
 export async function saveGeneratedContent(
@@ -116,12 +101,11 @@ export async function saveGeneratedContent(
         prompt,
         contentType,
       })
-      .returning()
-      .execute();
+      .returning();
     return savedContent;
   } catch (error) {
     console.error("Error saving generated content:", error);
-    return null;
+    throw error;
   }
 }
 
@@ -130,7 +114,7 @@ export async function getGeneratedContentHistory(
   limit: number = 10
 ) {
   try {
-    const history = await db
+    return await db
       .select({
         id: GeneratedContent.id,
         content: GeneratedContent.content,
@@ -146,12 +130,10 @@ export async function getGeneratedContentHistory(
         )
       )
       .orderBy(desc(GeneratedContent.createdAt))
-      .limit(limit)
-      .execute();
-    return history;
+      .limit(limit);
   } catch (error) {
     console.error("Error fetching generated content history:", error);
-    return [];
+    throw error;
   }
 }
 
@@ -161,23 +143,18 @@ export async function createOrUpdateUser(
   name: string
 ) {
   try {
-    console.log("Creating or updating user:", clerkUserId, email, name);
-
     const [existingUser] = await db
       .select()
       .from(Users)
       .where(eq(Users.stripeCustomerId, clerkUserId))
-      .limit(1)
-      .execute();
+      .limit(1);
 
     if (existingUser) {
       const [updatedUser] = await db
         .update(Users)
         .set({ name, email })
         .where(eq(Users.stripeCustomerId, clerkUserId))
-        .returning()
-        .execute();
-      console.log("Updated user:", updatedUser);
+        .returning();
       return updatedUser;
     }
 
@@ -185,31 +162,26 @@ export async function createOrUpdateUser(
       .select()
       .from(Users)
       .where(eq(Users.email, email))
-      .limit(1)
-      .execute();
+      .limit(1);
 
     if (userWithEmail) {
       const [updatedUser] = await db
         .update(Users)
         .set({ name, stripeCustomerId: clerkUserId })
         .where(eq(Users.email, email))
-        .returning()
-        .execute();
-      console.log("Updated user:", updatedUser);
-      sendWelcomeEmail(email, name);
+        .returning();
+      await sendWelcomeEmail(email, name);
       return updatedUser;
     }
 
     const [newUser] = await db
       .insert(Users)
       .values({ email, name, stripeCustomerId: clerkUserId, points: 50 })
-      .returning()
-      .execute();
-    console.log("New user created:", newUser);
-    sendWelcomeEmail(email, name);
+      .returning();
+    await sendWelcomeEmail(email, name);
     return newUser;
   } catch (error) {
     console.error("Error creating or updating user:", error);
-    return null;
+    throw error;
   }
 }
