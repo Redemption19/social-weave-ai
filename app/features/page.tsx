@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Twitter, Instagram, Linkedin, User, Star, History, Eye, Cloud } from 'lucide-react';
+import { Twitter, Linkedin, User, Star, History, Eye, Cloud } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 
 const FeatureSection = () => {
