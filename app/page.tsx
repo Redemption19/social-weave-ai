@@ -43,12 +43,20 @@ export default function Home() {
             cutting-edge AI technology.
           </p>
           <div className="flex justify-center space-x-4">
-            <Button
-              asChild
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-lg transition h-18 duration-300 ease-in-out transform hover:scale-105"
-            >
-              <Link href="/generate">Start Creating</Link>
-            </Button>
+            {userId ? (
+              <Button
+                asChild
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-lg transition h-18 duration-300 ease-in-out transform hover:scale-105"
+              >
+                <Link href="/generate">Start Creating</Link>
+              </Button>
+            ) : (
+              <SignUpButton mode="modal">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-lg transition h-18 duration-300 ease-in-out transform hover:scale-105">
+                  Start Creating
+                </Button>
+              </SignUpButton>
+            )}
             <Button
               asChild
               className="bg-transparent border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white h-18 px-4 py-2 rounded text-lg transition duration-300 ease-in-out"
@@ -57,7 +65,6 @@ export default function Home() {
             </Button>
           </div>
         </div>
-
 
         {/* Features Section */}
         <div className="py-20" id="features">
@@ -103,8 +110,8 @@ export default function Home() {
           </div>
         </div>
 
-         {/* Benefits Section */}
-         <div className="py-20 bg-gray-900 rounded-3xl my-20 relative">
+        {/* Benefits Section */}
+        <div className="py-20 bg-gray-900 rounded-3xl my-20 relative">
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-3xl">
             <svg
               className="absolute w-full h-full"
@@ -185,7 +192,7 @@ export default function Home() {
           {userId ? (
             <Button
               asChild
-              className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-lg transition h-18 duration-300 ease-in-out transform hover:scale-105"
             >
               <Link href="/generate">
                 Generate Content Now <ArrowRightIcon className="ml-2 h-5 w-5" />
@@ -194,7 +201,7 @@ export default function Home() {
           ) : (
             <SignUpButton mode="modal">
               <Button className="bg-blue-600 hover:bg-blue-700 text-white h-12 px-6 py-4 rounded text-lg transition duration-300 ease-in-out transform hover:scale-105">
-                Get Started Free <ArrowRightIcon className="ml-2 h-5 w-5" />
+                Generate Content Now <ArrowRightIcon className="ml-2 h-5 w-5" />
               </Button>
             </SignUpButton>
           )}
