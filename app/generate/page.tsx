@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -71,23 +71,7 @@ export default function GenerateContent() {
   const [selectedHistoryItem, setSelectedHistoryItem] =
     useState<HistoryItem | null>(null);
 
-  useEffect(() => {
-    if (!apiKey) {
-      console.error("Gemini API key is not set");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/");
-    } else if (isSignedIn && user) {
-      console.log("User loaded:", user);
-      fetchUserPoints();
-      fetchContentHistory();
-    }
-  }, [isLoaded, isSignedIn, user, router]);
-
-  const fetchUserPoints = async () => {
+  const fetchUserPoints = useCallback(async () => {
     if (user?.id) {
       console.log("Fetching points for user:", user.id);
       const points = await getUserPoints(user.id);
@@ -106,14 +90,24 @@ export default function GenerateContent() {
         }
       }
     }
-  };
+  }, [user]);
 
-  const fetchContentHistory = async () => {
+  const fetchContentHistory = useCallback(async () => {
     if (user?.id) {
       const contentHistory = await getGeneratedContentHistory(user.id);
       setHistory(contentHistory);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/");
+    } else if (isSignedIn && user) {
+      console.log("User loaded:", user);
+      fetchUserPoints();
+      fetchContentHistory();
+    }
+  }, [isLoaded, isSignedIn, user, router, fetchUserPoints, fetchContentHistory]);
 
   const handleGenerate = async () => {
     if (
@@ -132,8 +126,7 @@ export default function GenerateContent() {
 
       let promptText = `Generate ${contentType} content about "${prompt}".`;
       if (contentType === "twitter") {
-        promptText +=
-          " Provide a thread of 5 tweets, each under 280 characters.";
+        promptText += " Provide a thread of 5 tweets, each under 280 characters.";
       }
 
       let imagePart: Part | null = null;
@@ -159,8 +152,7 @@ export default function GenerateContent() {
             },
           };
         }
-        promptText +=
-          " Describe the image and incorporate it into the caption.";
+        promptText += " Describe the image and incorporate it into the caption.";
       }
 
       const parts: (string | Part)[] = [promptText];
@@ -171,9 +163,7 @@ export default function GenerateContent() {
 
       let content: string[];
       if (contentType === "twitter") {
-        content = generatedText
-          .split("\n\n")
-          .filter((tweet) => tweet.trim() !== "");
+        content = generatedText.split("\n\n").filter((tweet) => tweet.trim() !== "");
       } else {
         content = [generatedText];
       }
@@ -181,10 +171,7 @@ export default function GenerateContent() {
       setGeneratedContent(content);
 
       // Update points
-      const updatedUser = await updateUserPoints(
-        user.id,
-        -POINTS_PER_GENERATION
-      );
+      const updatedUser = await updateUserPoints(user.id, -POINTS_PER_GENERATION);
       if (updatedUser) {
         setUserPoints(updatedUser.points);
       }
@@ -213,9 +200,7 @@ export default function GenerateContent() {
     setContentType(item.contentType);
     setPrompt(item.prompt);
     setGeneratedContent(
-      item.contentType === "twitter"
-        ? item.content.split("\n\n")
-        : [item.content]
+      item.contentType === "twitter" ? item.content.split("\n\n") : [item.content]
     );
   };
 
@@ -247,11 +232,10 @@ export default function GenerateContent() {
       <div className="flex items-center justify-center min-h-screen bg-[#0a0a0a]">
         <div className="text-center bg-[#111111] p-8 rounded-lg shadow-lg">
           <h1 className="text-3xl font-bold text-white mb-4">
-            Welcome to ThreadCraft AI
+            Welcome to SocialWeave AI
           </h1>
           <p className="text-gray-400 mb-6">
-            To start generating amazing content, please sign in or create an
-            account.
+            To start generating amazing content, please sign in or create an account.
           </p>
           <SignInButton mode="modal">
             <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2">

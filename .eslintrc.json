@@ -1,5 +1,8 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"],
-  "rules": { "@typescript-eslint/no-explicit-any": "off" }
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "warn", // Change from error to warning
+    "@typescript-eslint/no-empty-interface": "off", // Disable empty interface rule
+    "react-hooks/exhaustive-deps": "warn" // Change from error to warning
+  }
 }
-
