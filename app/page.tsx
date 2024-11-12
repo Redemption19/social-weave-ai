@@ -109,57 +109,53 @@ export default function Home() {
             ))}
           </div>
         </div>
-
-        {/* Benefits Section */}
-        <div className="py-20 bg-gray-900 rounded-3xl my-20 relative">
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-3xl">
-            <svg
-              className="absolute w-full h-full"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-            >
-              <path
-                d="M0,0 L100,0 L100,100 L0,100 Z"
-                fill="url(#grid-pattern)"
-              />
-            </svg>
-            <defs>
-              <pattern
-                id="grid-pattern"
-                width="10"
-                height="10"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 10 0 L 0 0 0 10"
-                  fill="none"
-                  stroke="rgba(255,255,255,0.05)"
-                  strokeWidth="0.5"
-                />
-              </pattern>
-            </defs>
-          </div>
-          <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-12 text-center text-white">
-              Why Choose Our AI Content Generator?
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              {[
-                "Save time and effort on content creation",
-                "Consistently produce high-quality posts",
-                "Increase engagement across all platforms",
-                "Stay ahead of social media trends",
-                "Customize content to match your brand voice",
-                "Scale your social media presence effortlessly",
-              ].map((benefit, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <CheckCircleIcon className="w-6 h-6 text-green-500 flex-shrink-0" />
-                  <span className="text-gray-300">{benefit}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="py-20 bg-gray-900 rounded-3xl my-20 relative px-4 md:px-6 max-w-5xl mx-auto">
+  <div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded">
+    <svg
+      className="absolute w-full h-full"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+    >
+      <path d="M0,0 L100,0 L100,100 L0,100 Z" fill="url(#grid-pattern)" />
+    </svg>
+    <defs>
+      <pattern
+        id="grid-pattern"
+        width="10"
+        height="10"
+        patternUnits="userSpaceOnUse"
+      >
+        <path
+          d="M 10 0 L 0 0 0 10"
+          fill="none"
+          stroke="rgba(255,255,255,0.05)"
+          strokeWidth="0.5"
+        />
+      </pattern>
+    </defs>
+  </div>
+  <div className="relative z-10 px-4 sm:px-8">
+    <h2 className="text-3xl font-bold mb-12 text-center text-white">
+      Why Choose Our AI Content Generator?
+    </h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-auto">
+      {[
+        "Save time and effort on content creation",
+        "Consistently produce high-quality posts",
+        "Increase engagement across all platforms",
+        "Stay ahead of social media trends",
+        "Customize content to match your brand voice",
+        "Scale your social media presence effortlessly",
+      ].map((benefit, index) => (
+        <div key={index} className="flex items-center space-x-3">
+          <CheckCircleIcon className="w-6 h-6 text-green-500 flex-shrink-0" />
+          <span className="text-gray-300">{benefit}</span>
         </div>
+      ))}
+    </div>
+  </div>
+</div>
+
 
         {/* CTA Section */}
         <div className="text-center py-20 relative">
